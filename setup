@@ -1,0 +1,11 @@
+# Clone the repository
+git clone https://github.com/your-repo/lead-management-ai.git
+cd lead-management-ai
+
+# Create environment files
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+
+# Edit the environment variables
+nano server/.env
+nano client/.env
