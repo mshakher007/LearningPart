@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: lead_management_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: lead_management
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - lead-network
+
+  backend:
+    build: ./server
+    container_name: lead_management_backend
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: lead_management
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "5000:5000"
+    networks:
+      - lead-network
+
+  frontend:
+    build: ./client
+    container_name: lead_management_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - lead-network
+
+networks:
+  lead-network:
+    driver: bridge
